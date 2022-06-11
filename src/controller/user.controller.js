@@ -5,6 +5,7 @@ class UserController {
     // 1. 获取数据
     const { user_name, password } = ctx.request.body
 
+    // try...catch 完善错误处理，因为操作数据库时可能会发生不明错误
     try {
       // 2. 操作数据库
       const res = await createUser(user_name, password)
@@ -24,7 +25,8 @@ class UserController {
   }
 
   async login(ctx, next) {
-    ctx.body = '登陆成功'
+    const { user_name } = ctx.request.body
+    ctx.body = '登陆成功' + `${user_name}`
   }
 }
 
