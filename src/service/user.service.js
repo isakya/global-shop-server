@@ -10,6 +10,23 @@ class UserService {
     // 3. return 出去
     return res.dataValues
   }
+
+  async getUserInfo({ id, user_name, password, is_admin }) {
+    const whereOpt = {}
+
+    // 如果 id 存在 则 放到 whereOpt 对象里面
+    id && Object.assign(whereOpt, { id })
+    user_name && Object.assign(whereOpt, { user_name })
+    password && Object.assign(whereOpt, { password })
+    is_admin && Object.assign(whereOpt, { is_admin })
+
+    const res = await User.findOne({
+      attributes: ['id', 'user_name', 'password', 'is_admin'],
+      where: whereOpt
+    })
+
+    return res ? res.dataValues : null
+  }
 }
 
 module.exports = new UserService()
