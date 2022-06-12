@@ -5,6 +5,7 @@ const Koa = require('koa')
 
 const KoaBody = require('koa-body')
 const KoaStatic = require('koa-static')
+// 导入参数校验包
 const parameter = require('koa-parameter')
 
 const errHandler = require('./errHandler')
