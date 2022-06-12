@@ -6,7 +6,8 @@ const { tokenExpiredError, invalidToken, hasNotAdminPermission } = require('../c
 
 const auth = async (ctx, next) => {
   // 拿到请求头的 token
-  const { authorization } = ctx.request.header
+  // 给 '' 默认值，当没有 authorization 的时候 就是个空 ''，不然真没有的时候服务器会报错
+  const { authorization = '' } = ctx.request.header
   // 去掉 'Bearer '
   const token = authorization.replace('Bearer ', '')
   // console.log(token)
