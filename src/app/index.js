@@ -5,13 +5,15 @@ const KoaBody = require('koa-body')
 
 const errHandler = require('./errHandler')
 
-const userRouter = require('../router/user.route')
+const router = require('../router')
 
 const app = new Koa()
 
 
 app.use(KoaBody())
-app.use(userRouter.routes())
+app.use(router.routes())
+// http请求方式不支持时 跑下面的中间件，给客户端报501 错误
+app.use(router.allowedMethods())
 
 // 统一错误处理
 app.on('error', errHandler)

@@ -51,11 +51,10 @@ class UserController {
     // 1. 获取数据
     const id = ctx.state.user.id
     const password = ctx.request.body.password
-    // console.log(id, password)
     // 2. 操作数据库
-
     try {
       await updateById({ id, password })
+      // 3. 返回结果
       ctx.body = {
         code: 0,
         message: '修改密码成功',
@@ -65,20 +64,6 @@ class UserController {
       console.error(err)
       ctx.app.emit('error', changePwdError, ctx)
     }
-    // if (await updateById({ id, password })) {
-    //   ctx.body = {
-    //     code: 0,
-    //     message: '修改密码成功',
-    //     result: ''
-    //   }
-    // } else {
-    //   ctx.body = {
-    //     code: '10007',
-    //     message: '修改密码失败',
-    //     result: ''
-    //   }
-    // }
-    // 3. 返回结果
   }
 }
 
