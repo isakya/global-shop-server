@@ -5,9 +5,11 @@ class GoodsController {
     // console.log(ctx.request.files.file)
     // file 是自定义名称，前端传过来的
     const { file } = ctx.request.files
+    // 要求的文件类型
     const fileTypes = ['image/jpeg', 'image/png']
     if (file) {
-      if (!fileTypes.includes(file.type)) {
+      // 判断文件类型是否匹配
+      if (!fileTypes.includes(file.mimetype)) {
         return ctx.app.emit('error', unSupportedFileType, ctx)
       }
       ctx.body = {
