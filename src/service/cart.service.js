@@ -1,5 +1,6 @@
 const { Op } = require('sequelize')
 const Cart = require('../model/cart.model')
+const Goods = require('../model/goods.model')
 
 class CartService {
   async createOrUpdate(user_id, goods_id) {
@@ -22,6 +23,29 @@ class CartService {
         user_id,
         goods_id
       })
+    }
+  }
+
+  async findCarts(pageNum, pageSize) {
+    const offset = (pageNum - 1) * pageSize
+    const { count, rows } = await Cart.findAndCountAll({
+      // 需要的字段
+      attributes: ['id', 'number', 'selected'],
+      offset: offset,
+      limit: pageSize * 1,
+      // 查除了自己表内的数据外还要查 Goods 表里的数据
+      include: {
+        model: Goods,
+        as: 'goods_info',
+        // 需要的字段
+        attributes: ['id', 'goods_name', 'goods_img']
+      }
+    })
+    return {
+      pageNum,
+      pageSize,
+      total: count,
+      list: rows
     }
   }
 }

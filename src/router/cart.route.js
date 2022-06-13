@@ -6,7 +6,7 @@ const { auth } = require('../middleware/auth.middleware')
 const { validator } = require('../middleware/cart.middleware')
 
 // 控制器
-const { add } = require('../controller/cart.controller')
+const { add, findAll } = require('../controller/cart.controller')
 
 // 2. 实例化router对象
 const router = new Router({ prefix: '/carts' })
@@ -15,6 +15,12 @@ const router = new Router({ prefix: '/carts' })
 
 // 3.1 添加到购物车接口：登陆，格式
 router.post('/', auth, validator, add)
+
+// 3.2 获取购物车列表
+router.get('/', auth, findAll)
+
+// 3.3 更新购物车
+// router.patch('/:id', auth,)
 
 // 4. 导出router对象 
 module.exports = router
