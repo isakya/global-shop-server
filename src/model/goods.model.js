@@ -23,6 +23,8 @@ const Goods = seq.define('Goods', {
     allowNull: false,
     comment: '商品图片url'
   }
+}, {
+  paranoid: true
 })
 
 // node ./src/model/goods.model.js 执行创建表

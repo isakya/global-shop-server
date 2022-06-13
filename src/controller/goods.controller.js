@@ -1,6 +1,6 @@
 const path = require('path')
-const { fileUploadError, unSupportedFileType, publishGoodsError, updateGoodsError, invalidGoodsID } = require('../constant/err.type')
-const { createGoods, updateGoods, removeGoods } = require('../service/goods.service')
+const { fileUploadError, unSupportedFileType, publishGoodsError, updateGoodsError, invalidGoodsID, removeGoodsFailed } = require('../constant/err.type')
+const { createGoods, updateGoods, removeGoods, restoreGoods } = require('../service/goods.service')
 
 class GoodsController {
   async upload(ctx, next) {
@@ -64,12 +64,41 @@ class GoodsController {
   }
 
   async remove(ctx) {
-    const res = await removeGoods(ctx.params.id)
-    ctx.body = {
-      code: 0,
-      message: '删除商品成功',
-      result: ''
+    try {
+      const res = await removeGoods(ctx.params.id)
+      if (res) {
+        ctx.body = {
+          code: 0,
+          message: '下架商品成功',
+          result: ''
+        }
+      } else {
+        return ctx.app.emit('error', invalidGoodsID, ctx)
+      }
+
+    } catch (err) {
+      console.error(err)
+      removeGoodsFailed.result = err
+      return ctx.app.emit('error', removeGoodsFailed, ctx)
     }
+  }
+
+  async restore(ctx) {
+    try {
+      const res = await restoreGoods(ctx.params.id)
+      if (res) {
+        ctx.body = {
+          code: 0,
+          message: '商品上架成功',
+          result: ''
+        }
+      } else {
+        return ctx.app.emit('error', invalidGoodsID, ctx)
+      }
+    } catch (err) {
+      console.error(err)
+    }
+
   }
 }
 

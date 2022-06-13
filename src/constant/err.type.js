@@ -76,7 +76,12 @@ module.exports = {
   },
   invalidGoodsID: {
     code: '10206',
-    message: '待修改的商品不存在',
+    message: '无效的商品id',
+    result: ''
+  },
+  removeGoodsFailed: {
+    code: '10207',
+    message: '下架商品失败',
     result: ''
   }
 }
