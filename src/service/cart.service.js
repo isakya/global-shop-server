@@ -14,9 +14,9 @@ class CartService {
       }
     })
     if (res) {
-      // 已经存在一条记录，将 number(商品数量) 增加 1 
+      // 已经存在一条记录，将 number(商品数量) 增加 1 （数据库操作）
       await res.increment('number')
-      // 读取更新以后的结果再返回
+      // 读取更新以后的结果再返回（reload 重新加载数据）
       return await res.reload()
     } else {
       return await Cart.create({
@@ -47,6 +47,21 @@ class CartService {
       total: count,
       list: rows
     }
+  }
+
+  async updateCarts(params) {
+    const { id, number, selected } = params
+    // Model.findByPk(1)等同于Model.findOne({primaryKey: 1})，需要自己指定主键
+    const res = await Cart.findByPk(id)
+
+    if (!res) return ''
+
+    number !== undefined ? (res.number = number) : ''
+
+    selected !== undefined ? (res.selected = selected) : ''
+
+    // 更新数据
+    return await res.save()
   }
 }
 

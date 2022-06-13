@@ -83,5 +83,10 @@ module.exports = {
     code: '10207',
     message: '下架商品失败',
     result: ''
+  },
+  cartFormatError: {
+    code: '10301',
+    message: '购物车数据格式错误',
+    result: ''
   }
 }
