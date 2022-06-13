@@ -53,12 +53,16 @@ class UserController {
     const password = ctx.request.body.password
     // 2. 操作数据库
     try {
-      await updateById({ id, password })
-      // 3. 返回结果
-      ctx.body = {
-        code: 0,
-        message: '修改密码成功',
-        result: ''
+      const res = await updateById({ id, password })
+      if (res) {
+        // 3. 返回结果
+        ctx.body = {
+          code: 0,
+          message: '修改密码成功',
+          result: ''
+        }
+      } else {
+        ctx.app.emit('error', changePwdError, ctx)
       }
     } catch (err) {
       console.error(err)

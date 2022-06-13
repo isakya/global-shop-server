@@ -1,6 +1,6 @@
 const path = require('path')
-const { fileUploadError, unSupportedFileType, publishGoodsError } = require('../constant/err.type')
-const { createGoods } = require('../service/goods.service')
+const { fileUploadError, unSupportedFileType, publishGoodsError, updateGoodsError, invalidGoodsID } = require('../constant/err.type')
+const { createGoods, updateGoods } = require('../service/goods.service')
 
 class GoodsController {
   async upload(ctx, next) {
@@ -39,6 +39,27 @@ class GoodsController {
     } catch (err) {
       console.error(err)
       return ctx.app.emit('error', publishGoodsError, ctx)
+    }
+  }
+
+  async update(ctx) {
+    try {
+      // 在url里的id参数都会被ctx.params接收到
+      const res = await updateGoods(ctx.params.id, ctx.request.body)
+      if (res) {
+        ctx.body = {
+          code: 0,
+          message: '修改商品成功',
+          result: ''
+        }
+      } else {
+        return ctx.app.emit('error', invalidGoodsID, ctx)
+      }
+
+    } catch (err) {
+      console.error(err)
+      updateGoodsError.result = err
+      return ctx.app.emit('error', updateGoodsError, ctx)
     }
   }
 }

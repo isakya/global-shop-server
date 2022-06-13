@@ -37,7 +37,8 @@ class UserService {
     is_admin && Object.assign(newUser, { is_admin })
 
     const res = await User.update(newUser, { where: whereOpt })
-    return res[0] > 0 ? true : new error()
+
+    return res[0] > 0 ? true : false
   }
 }
 
