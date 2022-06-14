@@ -7,6 +7,7 @@ const router = new Router({ prefix: '/address' })
 // 中间件/控制器
 const { auth } = require('../middleware/auth.middleware')
 const { validator } = require('../middleware/addr.middleware')
+const { create } = require('../controller/addr.controller')
 
 // 3. 编写路由规则
 
@@ -16,9 +17,7 @@ router.post('/', auth, validator({
     type: 'string',
     format: /^1\d{10}$/
   }
-}), ctx => {
-  ctx.body = 'q'
-})
+}), create)
 
 
 
