@@ -24,9 +24,9 @@ git init
 
 查看 git 提交记录：
 
-![image-20220126001324221](https://gitee.com/dinosaur-egg/images_source/raw/master/image-20220126001324221.png)
+![image-20220126001324221](./Readme-img\image-20220126001324221.png)
 
-## 3 创建 ReadMe 文件
+## 3 创建 Readme 文件
 
 ## 4 把项目提交到本地仓库
 
@@ -86,7 +86,7 @@ npm i nodemon -D
 
 执行 `npm run dev` 启动服务
 
-![image-20220123135808096](https://gitee.com/dinosaur-egg/images_source/raw/master/image-20220123135808096.png)
+![image-20220123135808096](./Readme-img\image-20220123135808096.png)
 
 ## 2 读取配置文件
 
@@ -274,7 +274,7 @@ npm i koa-body
 
 改写 `app/index.js`
 
-![image-20220126000602405](https://gitee.com/dinosaur-egg/images_source/raw/master/image-20220126000602405.png)
+![image-20220126000602405](./Readme-img/image-20220126000602405.png)
 
 ## 3 解析请求的数据
 
@@ -338,7 +338,7 @@ npm i mysql2 sequelize
 
 `创建对应数据库`
 
-![image-20220611163209184](https://gitee.com/dinosaur-egg/images_source/raw/master/image-20220611163209184.png)
+![image-20220611163209184](C:\Users\Forever\Desktop\api\Readme-img\image-20220611163209184.png)
 
 ## 2 连接数据库
 
@@ -371,7 +371,7 @@ module.exports = seq
 
 ## 3 编写`.env` 配置文件
 
-![image-20220127015427405](https://gitee.com/dinosaur-egg/images_source/raw/master/image-20220127015427405.png)
+![image-20220127015427405](./Readme-img/image-20220127015427405.png)
 
 # 八、创建User模型
 
