@@ -6,7 +6,7 @@ const { auth } = require('../middleware/auth.middleware')
 const { validator } = require('../middleware/cart.middleware')
 
 // 控制器
-const { add, findAll, update } = require('../controller/cart.controller')
+const { add, findAll, update, remove, selectAll, unselectAll } = require('../controller/cart.controller')
 
 // 2. 实例化router对象
 const router = new Router({ prefix: '/carts' })
@@ -23,6 +23,13 @@ router.get('/', auth, findAll)
 router.patch('/:id', auth, validator({
   number: { type: 'number', required: false }, selected: { type: 'bool', required: false }
 }), update)
+
+// 3.4 删除购物车
+router.delete('/', auth, validator({ ids: 'array' }), remove)
+
+// 3.5 全选 与 全不选
+router.post('/selectAll', auth, selectAll)
+router.post('/unselectAll', auth, unselectAll)
 
 // 4. 导出router对象 
 module.exports = router

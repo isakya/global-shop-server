@@ -21,7 +21,9 @@ app.use(KoaBody({
     // 在option里的相对路径，不是相对于当前文件，是相对于process.cwd()
     uploadDir: path.join(__dirname, '../upload'),
     keepExtensions: true
-  }
+  },
+  // 配置需要解析参数的请求方式，不配默认只解析：'POST', 'PUT', 'PATCH'
+  parsedMethods: ['POST', 'PUT', 'PATCH', 'DELETE']
 }))
 // 把某一路径作为静态资源的路径，当前端访问静态资源时自动跳到该路径
 app.use(KoaStatic(path.join(__dirname, '../upload')))
