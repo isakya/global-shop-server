@@ -63,6 +63,17 @@ class CartService {
     // 更新数据
     return await res.save()
   }
+
+  async removeCarts(ids) {
+    return await Cart.destroy({
+      where: {
+        id: {
+          // 批量查找 ids 为数组
+          [Op.in]: ids
+        }
+      }
+    })
+  }
 }
 
 module.exports = new CartService()
