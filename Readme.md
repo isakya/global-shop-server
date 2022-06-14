@@ -2545,3 +2545,43 @@ const Address = seq.define('addresses', {
 module.exports = Address
 ```
 
+# 三十一、获取地址列表接口
+
+## 1 添加获取地址列表接口
+
+`src/route/addr.route.js`
+
+```js
+// 3.2 获取地址列表
+router.get('/', auth, findAll)
+```
+
+## 2 添加获取列表地址方法
+
+`src/controller/addr.controller.js`
+
+```js
+  async findAll(ctx) {
+    const user_id = ctx.state.user.id
+    const res = await findAllAddr(user_id)
+    ctx.body = {
+      code: 0,
+      message: '获取列表成功',
+      result: res
+    }
+  }
+```
+
+## 3 操作数据库获取地址列表
+
+`src/service/addr.service.js`
+
+```js
+  async findAllAddr(user_id) {
+    return await Address.findAll({
+      attributes: ['id', 'consignee', 'phone', 'address', 'is_default'],
+      where: { user_id }
+    })
+  }
+```
+
