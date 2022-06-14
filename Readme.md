@@ -2826,3 +2826,98 @@ const Order = seq.define('Orders', {
 module.exports = Order
 ```
 
+# 三十五、获取订单列表
+
+## 1 添加获取订单接口
+
+`src/router/order.route.js`
+
+```js
+// 获取订单列表
+router.get('/', auth, findAll)
+```
+
+## 2 添加获取订单列表方法
+
+`src/controller/order.controller.js`
+
+```js
+  async findAll(ctx) {
+    const { pageNum = 1, pageSize = 10, status = 0 } = ctx.request.query
+    const res = await findAllOrder(pageNum, pageSize, status)
+    ctx.body = {
+      code: 0,
+      message: '获取订单列表成功',
+      result: res
+    }
+  }
+```
+
+
+
+## 3 操作数据库获取订单列表
+
+`src/service/order.service.js`
+
+```js
+  async findAllOrder(pageNum, pageSize, status) {
+    const { count, rows } = await Order.findAndCountAll({
+      attributes: ['goods_info', 'total', 'order_number', 'status'],
+      where: {
+        status
+      },
+      offset: (pageNum - 1) * pageSize,
+      limit: pageSize * 1
+    })
+
+    return {
+      pageNum,
+      pageSize,
+      total: count,
+      list: rows
+    }
+  }
+```
+
+# 三十六、更新订单状态
+
+## 1 添加更新订单状态接口
+
+`src/router/order.route.js`
+
+```js
+// 更新订单状态
+router.patch('/:id', auth, validator({
+  status: 'number'
+}), update)
+```
+
+## 2 添加更新订单状态方法
+
+`src/controller/order.controller.js`
+
+```js
+  async update(ctx) {
+    const id = ctx.request.params.id
+    const { status } = ctx.request.body
+
+    const res = await updateOrder(id, status)
+
+    ctx.body = {
+      code: 0,
+      message: '更新订单状态成功',
+      result: res
+    }
+  }
+```
+
+## 3 操作数据库更新订单状态
+
+`src/service/order.service.js`
+
+```js
+  async updateOrder(id, status) {
+    return await Order.update({ status }, { where: { id } })
+  }
+```
+
