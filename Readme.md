@@ -2678,3 +2678,151 @@ async setDefaultAddr(user_id, id) {
   }
 ```
 
+# 三十四、生成订单接口
+
+## 1 添加生成订单接口
+
+`src/router/order.route.js`
+
+```js
+const Router = require('koa-router')
+
+const router = new Router({ prefix: '/orders' })
+
+const { auth } = require('../middleware/auth.middleware')
+const { validator } = require('../middleware/order.middleware')
+const { create } = require('../controller/order.controller')
+
+
+// 提交订单
+router.post('/', auth, validator({
+  address_id: 'int',
+  goods_info: 'string',
+  total: 'string'
+}), create)
+
+module.exports = router
+```
+
+## 2 添加生成订单参数校验中间件
+
+`src/middleware/order.middle.js`
+
+```js
+const { orderFormatError } = require('../constant/err.type')
+const validator = (rules) => {
+  return async (ctx, next) => {
+    try {
+      ctx.verifyParams(rules)
+    } catch (err) {
+      console.error(err)
+      orderFormatError.result = err
+      return ctx.app.emit('error', orderFormatError, ctx)
+    }
+    await next()
+  }
+}
+
+module.exports = {
+  validator
+}
+```
+
+## 3 添加生成订单方法
+
+`src/controller/order.controller.js`
+
+```js
+const { createOrder } = require('../service/order.service')
+
+class OrderController {
+  async create(ctx) {
+    // 准备数据
+
+    const user_id = ctx.state.user.id
+    const { address_id, goods_info, total } = ctx.request.body
+
+    // 订单编号 简单生成
+    const order_number = 'DD' + Date.now()
+
+    const res = await createOrder({ user_id, address_id, goods_info, total, order_number })
+
+    ctx.body = {
+      code: 0,
+      message: '生成订单成功',
+      result: res
+    }
+  }
+}
+
+module.exports = new OrderController()
+```
+
+## 4 添加生成订单操作数据库方法
+
+`src/service/order.service.js`
+
+```js
+const Order = require('../model/order.model')
+
+class OrderService {
+  async createOrder(order) {
+    return await Order.create(order)
+  }
+}
+
+module.exports = new OrderService()
+```
+
+## 5 添加订单表
+
+`src/model/order.model.js`
+
+```js
+const { DataTypes } = require('sequelize')
+const seq = require('../db/seq')
+
+const Order = seq.define('Orders', {
+  user_id: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    comment: '用户id'
+  },
+  address_id: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    comment: '地址id'
+  },
+  goods_info: {
+    // STRING 不够用 用长文本TEXT
+    type: DataTypes.TEXT,
+    allowNull: false,
+    comment: '商品信息'
+  },
+  // 总金额
+  total: {
+    // 十进制 小数点后面保留两位
+    type: DataTypes.DECIMAL(10, 2),
+    allowNull: false,
+    comment: '订单总金额'
+  },
+  order_number: {
+    // 16位字符
+    type: DataTypes.CHAR(16),
+    allowNull: false,
+    comment: '订单号'
+  },
+  // 订单状态
+  status: {
+    type: DataTypes.TINYINT,
+    allowNull: false,
+    defaultValue: 0,
+    comment: '订单状态(0: 未支付, 1: 已支付, 2: 已发货, 3: 已签收, 4: 取消)'
+  }
+})
+
+// Order.sync({ force: true })
+
+module.exports = Order
+```
+
