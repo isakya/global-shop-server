@@ -2585,3 +2585,96 @@ router.get('/', auth, findAll)
   }
 ```
 
+# 三十二、删除地址接口
+
+## 1 添加删除地址接口
+
+`src/router/addr.route.js`
+
+```js
+// 3.4 删除地址
+router.delete('/:id', auth, remove)
+```
+
+## 2 添加删除地址方法
+
+`src/controller/addr.controller.js`
+
+```js
+  async remove(ctx) {
+    const id = ctx.request.params.id
+    const res = await removeAddr(id)
+
+    ctx.body = {
+      code: 0,
+      message: '删除地址成功',
+      result: res
+    }
+  }
+```
+
+## 3 操作数据库删除地址
+
+`src/service/addr.service.js`
+
+```js
+  async removeAddr(id) {
+    return await Address.destroy({
+      where: {
+        id
+      }
+    })
+  }
+```
+
+# 三十三、设置默认地址接口
+
+## 1 添加设置默认地址接口
+
+`src/router/addr.route.js`
+
+```js
+// 3.5 设置默认地址
+router.patch('/:id', auth, setDefault)
+```
+
+## 2 添加设置默认地址方法
+
+`src/controller/addr.controller.js`
+
+```js
+  async setDefault(ctx) {
+    const user_id = ctx.state.user.id
+    const id = ctx.request.params.id
+    const res = await setDefaultAddr(user_id, id)
+
+    ctx.body = {
+      code: 0,
+      message: '设置默认成功',
+      result: res
+    }
+  }
+```
+
+## 3 操作数据库设置默认地址
+
+`src/service/addr.service.js`
+
+```js
+// 排他思想  
+async setDefaultAddr(user_id, id) {
+    // 先把所有地址设置为 false
+    await Address.update({ is_default: false }, {
+      where: {
+        user_id,
+      }
+    })
+    // 再将指定的地址设置为默认
+    return await Address.update({ is_default: true }, {
+      where: {
+        id
+      }
+    })
+  }
+```
+

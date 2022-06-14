@@ -1,4 +1,4 @@
-const { createAddr, findAllAddr, updateAddr } = require('../service/addr.service')
+const { createAddr, findAllAddr, updateAddr, removeAddr, setDefaultAddr } = require('../service/addr.service')
 class AddrController {
   async create(ctx) {
     // 解析 user_id, consignee, phone, address
@@ -29,6 +29,29 @@ class AddrController {
     ctx.body = {
       code: 0,
       message: '修改地址成功',
+      result: res
+    }
+  }
+
+  async remove(ctx) {
+    const id = ctx.request.params.id
+    const res = await removeAddr(id)
+
+    ctx.body = {
+      code: 0,
+      message: '删除地址成功',
+      result: res
+    }
+  }
+
+  async setDefault(ctx) {
+    const user_id = ctx.state.user.id
+    const id = ctx.request.params.id
+    const res = await setDefaultAddr(user_id, id)
+
+    ctx.body = {
+      code: 0,
+      message: '设置默认成功',
       result: res
     }
   }

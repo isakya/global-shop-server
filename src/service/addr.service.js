@@ -18,6 +18,29 @@ class AddrService {
       }
     })
   }
+
+  async removeAddr(id) {
+    return await Address.destroy({
+      where: {
+        id
+      }
+    })
+  }
+
+  async setDefaultAddr(user_id, id) {
+    // 先把所有地址设置为 false
+    await Address.update({ is_default: false }, {
+      where: {
+        user_id,
+      }
+    })
+    // 再将指定的地址设置为默认
+    return await Address.update({ is_default: true }, {
+      where: {
+        id
+      }
+    })
+  }
 }
 
 module.exports = new AddrService()
